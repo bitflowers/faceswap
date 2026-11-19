@@ -7,13 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-13
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app || sudo xcode-select -s /Applications/Xcode_15.0.1.app || sudo xcode-select -s /Applications/Xcode.app
 
       - name: Build Archive
         run: |
@@ -32,11 +32,9 @@ jobs:
           mkdir -p Payload/PicsiLive.app/models
           cp -r build/PicsiLive.xcarchive/Products/Applications/PicsiLive.app/* Payload/PicsiLive.app/
           
-          # Download official InSwapper model directly into the bundle
           echo "Downloading InSwapper neural model..."
           curl -L -o Payload/PicsiLive.app/models/inswapper_128.onnx https://huggingface.co/ezioruan/inswapper_128.onnx/resolve/main/inswapper_128.onnx
           
-          # Zip into valid IPA
           zip -r PicsiLive.ipa Payload
 
       - name: Upload IPA Artifact
