@@ -26,6 +26,14 @@ final class VisionFaceTracker {
     
     private let sequenceHandler = VNSequenceRequestHandler()
     
+    // EMA Temporal Filter for stabilizing face jitter across live video frames
+    private var smoothedLandmarks: [CGPoint]?
+    private let emaAlpha: CGFloat = 0.65
+    
+    func resetSmoothing() {
+        smoothedLandmarks = nil
+    }
+    
     // Standard InSwapper 128x128 destination 5-points (UIKit space: origin top-left, Y down)
     static let inswapperDst128_UIKit: [CGPoint] = [
         CGPoint(x: 46.2946, y: 51.6963), // Left eye
@@ -64,12 +72,33 @@ final class VisionFaceTracker {
         do {
             try sequenceHandler.perform([request], on: pixelBuffer, orientation: CGImagePropertyOrientation.up)
             guard let observation = request.results?.first as? VNFaceObservation,
-                  let landmarks = observation.landmarks else {
+                  let landmarks = observation.landmarks,
+                  let detected = parseObservationCI(observation, landmarks: landmarks, imageWidth: width, imageHeight: height) else {
+                smoothedLandmarks = nil
                 return nil
             }
             
-            return parseObservationCI(observation, landmarks: landmarks, imageWidth: width, imageHeight: height)
+            // Apply Exponential Moving Average (EMA) smoothing to eliminate video jitter
+            let smoothed5: [CGPoint]
+            if let prev = smoothedLandmarks, prev.count == 5 {
+                smoothed5 = zip(detected.landmarks5, prev).map { cur, prv in
+                    CGPoint(
+                        x: emaAlpha * cur.x + (1.0 - emaAlpha) * prv.x,
+                        y: emaAlpha * cur.y + (1.0 - emaAlpha) * prv.y
+                    )
+                }
+            } else {
+                smoothed5 = detected.landmarks5
+            }
+            smoothedLandmarks = smoothed5
+            
+            return DetectedFace(
+                boundingBox: detected.boundingBox,
+                landmarks5: smoothed5,
+                confidence: detected.confidence
+            )
         } catch {
+            smoothedLandmarks = nil
             return nil
         }
     }
