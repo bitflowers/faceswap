@@ -27,14 +27,20 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY=""
 
-      - name: Package IPA
+      - name: Package IPA Bundle
         run: |
-          mkdir -p Payload
-          cp -r build/PicsiLive.xcarchive/Products/Applications/PicsiLive.app Payload/
+          mkdir -p Payload/PicsiLive.app/models
+          cp -r build/PicsiLive.xcarchive/Products/Applications/PicsiLive.app/* Payload/PicsiLive.app/
+          
+          # Download official InSwapper model directly into the bundle
+          echo "Downloading InSwapper neural model..."
+          curl -L -o Payload/PicsiLive.app/models/inswapper_128.onnx https://huggingface.co/ezioruan/inswapper_128.onnx/resolve/main/inswapper_128.onnx
+          
+          # Zip into valid IPA
           zip -r PicsiLive.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PicsiLive-iOS
+          name: PicsiLive-iPhone-IPA
           path: PicsiLive.ipa
