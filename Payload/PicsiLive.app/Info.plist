@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Picsi Live</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>ai.picsi.live</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>PicsiLive</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Picsi Live requires camera access to perform real-time offline face swapping on your live video feed.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Picsi Live requires access to your photos to choose source faces and save swapped photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Picsi Live requires access to save swapped photos and videos to your Camera Roll.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Picsi Live requires microphone access to record videos with audio.</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+</dict>
+</plist>
