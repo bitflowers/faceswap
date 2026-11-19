@@ -241,7 +241,7 @@ struct PicsiLiveView: View {
             Task {
                 if let data = try? await newItem?.loadTransferable(type: Data.self),
                    let image = UIImage(data: data) {
-                    if let face = swapEngine.addFace(from: image, name: "Face \(swapEngine.activeFaces.count + 1)") {
+                    if swapEngine.addFace(from: image, name: "Face \(swapEngine.activeFaces.count + 1)") != nil {
                         showToast("Face added! Look into camera")
                     } else {
                         showToast("No face detected in photo")

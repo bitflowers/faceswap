@@ -29,13 +29,14 @@ jobs:
 
       - name: Package IPA Bundle
         run: |
+          mkdir -p Payload
+          cp -R build/PicsiLive.xcarchive/Products/Applications/PicsiLive.app Payload/
           mkdir -p Payload/PicsiLive.app/models
-          cp -r build/PicsiLive.xcarchive/Products/Applications/PicsiLive.app/* Payload/PicsiLive.app/
           
           echo "Downloading InSwapper neural model..."
           curl -L -o Payload/PicsiLive.app/models/inswapper_128.onnx https://huggingface.co/ezioruan/inswapper_128.onnx/resolve/main/inswapper_128.onnx
           
-          zip -r PicsiLive.ipa Payload
+          zip -r -y PicsiLive.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4

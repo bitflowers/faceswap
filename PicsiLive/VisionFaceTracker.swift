@@ -1,6 +1,7 @@
 import Vision
 import CoreImage
 import UIKit
+import ImageIO
 
 struct DetectedFace {
     let boundingBox: CGRect // Normalized [0, 1]
@@ -10,7 +11,7 @@ struct DetectedFace {
 
 final class VisionFaceTracker {
     
-    private let sequenceHandler = VNSequenceHandler()
+    private let sequenceHandler = VNSequenceRequestHandler()
     
     // Standard InSwapper 128x128 destination 5-points
     static let inswapperDst128: [CGPoint] = [
@@ -38,7 +39,7 @@ final class VisionFaceTracker {
         request.preferBackgroundProcessing = false
         
         do {
-            try sequenceHandler.perform([request], on: pixelBuffer, orientation: .up)
+            try sequenceHandler.perform([request], on: pixelBuffer, orientation: CGImagePropertyOrientation.up)
             guard let observation = request.results?.first as? VNFaceObservation,
                   let landmarks = observation.landmarks else {
                 return nil
@@ -56,7 +57,7 @@ final class VisionFaceTracker {
         let height = CGFloat(cgImage.height)
         
         let request = VNDetectFaceLandmarksRequest()
-        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: CGImagePropertyOrientation.up, options: [:])
         
         do {
             try handler.perform([request])
